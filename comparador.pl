@@ -213,11 +213,11 @@ sub full_header {
                                  { -language => 'JavaScript',
                                    -code => JS() },
                                 ]),
-	div({-style=>"margin: 5px; margin-right: 5px; float: right; text-align: right"},
-            a({-href=>"http://linguateca.pt"}, "Linguateca"), br,
-            a({-href=>"http://linguateca.pt/ACDC"}, "AC/DC"), br,
+         div({-id=>"linguateca"},
+    	div(a({-href=>"http://linguateca.pt"}, "Linguateca"), 
+            a({-href=>"http://linguateca.pt/ACDC"}, "AC/DC"),
             a({-href=>"ajuda.html"},"Ajuda")),
-         h1('Comparador'),
+         h1('Comparador')),
          "<div id='content'>",
         );
 }
