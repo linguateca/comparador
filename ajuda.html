@@ -1,0 +1,73 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>Comparador: exemplos de uso</title>
+<link href="comparador.css" rel="stylesheet" type="text/css"/>
+<script src="jquery.js" type="text/JavaScript"></script>
+<script type="text/JavaScript">
+   $(document).ready( function() {
+      $('.example').each(function() {
+            var q1 = $(this).attr('query1').replace(/"/g,'&quot;');
+            var q2 = $(this).attr('query2').replace(/"/g,'&quot;');
+            $(this).html('<form method="post" action="comparador.pl" enctype="multipart/form-data" style="text-align: center"> <table id="form"><tr> <th>Procurar: </th> <td><input type="text" name="lquery"  size="40" id="lquery" value="' + q1 + '" readonly="1"/></td> <th>Procurar: </th> <td><input type="text" name="rquery"  size="40" id="rquery" value="' + q2 + '" readonly="1"/></td> </tr> <tr><th>Corpo: </th> <td><select name="lcorpo"  id="lcorpo"> <option selected="selected" value="' + $(this).attr('corpus1') + '">' + $(this).attr('corpus1') + '</option> </select></td> <th>Corpo: </th> <td><select name="rcorpo"  id="rcorpo"> <option selected="selected" value="' + $(this).attr('corpus2') + '">' + $(this).attr('corpus2') + '</option> </select></td></tr> <tr><th>Distribuir por: </th> <td><select name="ldistr"  id="ldistr"> <option selected="selected" value="' + $(this).attr('distribuicao1') + '">' + $(this).attr('distribuicao1') + '</option> </select></td> <th>Distribuir por: </th> <td><select name="rdistr"  id="rdistr"> <option selected="selected" value="' + $(this).attr('distribuicao2') + '">' + $(this).attr('distribuicao2') + '</option> </select></td></tr></table><input type="submit" name="bt" value="&gt;&gt; Experimentar &lt;&lt;" /></form>');
+        }); });
+</script>
+</head>
+<body>
+<div id="header">
+  <div style="float: right; text-align: right">
+    <a style="display: block; margin: 5px;" target="_top" href="http://www.linguateca.pt/">Linguateca</a>
+    <a style="display: block; margin: 5px;" href="comparador.pl">Voltar ao Comparador</a>
+  </div>
+  <h1>Comparador</h1></div><div id="contents"><br />
+
+<h2>O que é?</h2>
+
+<p>O comparador permite comparar duas procuras que um utilizador queira comparar, colocando-as visualmente ao lado uma da outra. Pode ser usado para comparar em dois corpos diferentes, ou duas palavras diferentes, ou duas expressões de procura diferentes. etc. </p>
+
+
+<h2>Exemplos</h2>
+
+<h3>Ex. &ldquo;virmos&rdquo;</h3>
+
+<p>Considere-se por exemplo a palavra <tt>virmos</tt>, que tanto pode ser uma
+forma do verbo <tt>vir</tt> ou <tt>ver</tt>. Pode surgir a dúvida, de
+que verbo é mais frequente esta forma? E qual a variação entre dois corpos
+diferentes? A imagem que se segue é um exemplo de como isso pode ser
+verificado com o Comparador:</p>
+
+    <div class="example" query1="virmos" query2="virmos"
+                        corpus1="MUSEUDAPESSOA" corpus2="AVANTE"
+                         distribuicao1="lema" distribuicao2="lema"></div>
+
+<h3>Ex. &ldquo;almoço&rdquo; e &ldquo;jantar&rdquo;, por variante</h3>
+
+<p>Será que a distribuição dos lemas <tt>almoço</tt> e <tt>jantar</tt>
+é a mesma em português de Portugal e do Brasil? Podemos
+obter alguns resultados realizando a seguinte pesquisa:</p>
+
+    <div class="example" query1='[lema="almoço|jantar" & variante="PT"]' query2='[lema="almoço|jantar" & variante="BR"]'
+                        corpus1="MUSEUDAPESSOA" corpus2="MUSEUDAPESSOA"
+                         distribuicao1="lema" distribuicao2="lema"></div>
+
+<h3>Ex. Comparação de &ldquo;ser&rdquo; e &ldquo;estar&rdquo; por forma</h3>
+
+<p>Será que os verbos <tt>ser</tt> e <tt>estar</tt> são usados
+  tipicamente com a mesma pessoa?</p>
+
+    <div class="example" query1='[lema="ser" & temcagr="IMPF.*"]' query2='[lema="estar" & temcagr="IMPF.*"]'
+                        corpus1="ECI-EBR" corpus2="ECI-EBR"
+                         distribuicao1="pessnum" distribuicao2="pessnum"></div>
+
+<hr>
+Última mudança: 9 de fevereiro de 2013.
+<address>
+
+<a href="http://www.linguateca.pt/cgi-bin/correio/FormularioCorreio.pl?pagina=dinis2//html/acesso/ensinador/ensinador_exemplos.html&servico=Comparador">Coment&aacute;rios, sugest&otilde;es e perguntas sobre o Comparador</a>
+</address>
+
+
+</body>
+</html>

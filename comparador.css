@@ -1,0 +1,107 @@
+
+#wait { 
+  text-align: center;
+  margin-top: 150px;
+  display: block;
+}
+
+#wait img { 
+  padding: 50px;
+  border: dotted 2px #aaaaaa;
+}
+
+body {
+  margin: 0px;
+  padding: 0px; 
+}
+
+h1 {
+  margin: 0px;
+  background-color: #eeeeee;
+  border-bottom: solid 1px #999999; 
+  padding-top: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 20px;
+}
+
+#content {
+  margin: 10px;
+}
+
+form {
+  margin-top: 25px; 
+  margin-bottom: 25px; 
+}
+
+#form {
+  width: 90%; margin-left: auto; margin-right: auto;
+  border: dotted 1px #999; border-collapse: collapse;
+  border-left: none; margin-bottom: 5px;
+}
+
+#form td {
+  width: 35%; text-align: left; padding: 4px;
+}
+
+#form th {
+  border-left: dotted 1px #999; text-align: right; width: 15%; 
+}
+
+input[type='text'], select {
+  padding: 3px;
+  border: solid 1px #999;
+}
+
+input[type='text']:hover, input[type='text']:focus {
+  background-color: #f0f0f0;
+}
+
+input[type='submit'] {
+  padding: 3px;
+  border: solid 1px #999;
+  background-color: #efefef;
+}
+
+input[type='submit']:hover {
+  cursor: pointer;
+  background-color: #aaaaaa;
+  color: #ffffff;
+}
+
+h2 {
+  border-bottom: dotted 2px #999;
+}
+
+#results-left {
+  width: 47%;
+  float: left;
+  /*  height: 400px; */
+  /*  overflow: scroll; */
+  border: solid 1px #999;
+  padding: 10px;
+}
+
+#results-right {
+  width: 47%;
+  float: right;
+  /*    height: 400px; */
+  /*    overflow: scroll; */
+  border: solid 1px #999;
+  padding: 10px;
+}
+
+#results {
+  margin-left: auto;
+  margin-right: auto;
+  width: 98%;
+}
+
+#results tr:nth-child(odd) {
+  background-color: #efefef;
+}
+
+#contents {
+  margin-left: 10px;
+  margin-right: 10px;
+}
