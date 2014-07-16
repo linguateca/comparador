@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/opt/perl-5.20.0/bin/perl
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ use CWB::CQP::More;
 use Try::Tiny;
 use CGI qw/:standard/;
 use JSON;
-my $JQUERY = '/acesso/comparador/jquery.js';
+my $JQUERY = 'jquery.js';
 
 include_php_vars("/var/www/html/acesso/var_corpora.php");
 #line 14
@@ -213,9 +213,10 @@ sub full_header {
                                  { -language => 'JavaScript',
                                    -code => JS() },
                                 ]),
-	div({-style=>"margin: 5px; float: right; text-align: right"},
+	div({-style=>"margin: 5px; margin-right: 5px; float: right; text-align: right"},
             a({-href=>"http://linguateca.pt"}, "Linguateca"), br,
-            a({-href=>"ajuda.html"},"Ajuda"), "&nbsp;"),
+            a({-href=>"http://linguateca.pt/ACDC"}, "AC/DC"), br,
+            a({-href=>"ajuda.html"},"Ajuda")),
          h1('Comparador'),
          "<div id='content'>",
         );
