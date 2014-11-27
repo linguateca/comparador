@@ -31,19 +31,20 @@ if (param('lcorpo') && param('lquery') && param('ldistr') &&
     if (exists($corpora{param('lcorpo')}) && exists($corpora{param('rcorpo')})) {
         _log() if param('log');
         print div({id=>'wait'}, img({src=>'aguarde.gif'}));
-        compare( 
-                 merge => param("merge") ? 1 : 0,
-				 limit => param("limite"),
-                 left => {
-                          corpo => param("lcorpo"),
-                          query => guess_query(param("lquery")),
-                          distr => param("ldistr"),
-                         },
-                 right => {
-                           corpo => param("rcorpo"),
-                           query => guess_query(param("rquery")),
-                           distr => param("rdistr"),
-                          });
+        compare(
+                totals => param("totais") ? 1 : 0,
+                merge  => param("merge") ? 1 : 0,
+                limit  => param("limite"),
+                left => {
+                         corpo => param("lcorpo"),
+                         query => guess_query(param("lquery")),
+                         distr => param("ldistr"),
+                        },
+                right => {
+                          corpo => param("rcorpo"),
+                          query => guess_query(param("rquery")),
+                          distr => param("rdistr"),
+                         });
     }
     else {
         show_error("Corpo inválido");
@@ -58,32 +59,54 @@ sub compare {
     my %data = @_;
     my $error;
 
-	if ($data{merge}) {
-		my %left_results  = map {@$_} results(%{$data{left}});
-		my %right_results = map {@$_} results(%{$data{right}});
-		my %merge;
-		for my $k (keys %left_results, keys %right_results) {
-			$merge{$k} = [ $left_results{$k} || 0 , $right_results{$k} || 0 ];			
-		}
+    my @lf = results(%{$data{left}});
+    my @rf = results(%{$data{right}});
 
-		print div( { -id => 'results' },
-			 _format( _limit($data{limit}, map { [ $_, $merge{$_}[0], $merge{$_}[1] ] } 
-					  sort { $merge{$b}[0] + $merge{$b}[1] <=>
-                             $merge{$a}[0] + $merge{$a}[1] } keys %merge  ))
-		);
+    my %left_results  = map {@$_} @lf;
+    my %right_results = map {@$_} @rf;
+
+    my $left_total = 0;
+    my $right_total = 0;
+    my $totals = 0;
+
+    if ($data{totals}) {
+        $totals = 1;
+        for my $key (%left_results) {
+            $left_total += $left_results{$key};
+        }
+        for my $key (%right_results) {
+            $right_total += $right_results{$key};
+        }
+    }
+
+    if ($data{merge}) {
+        my %merge;
+
+        for my $k (keys %left_results, keys %right_results) {
+            $merge{$k} = [ $left_results{$k} || 0 , $right_results{$k} || 0 ];
+        }
+
+        print div( { -id => 'results' },
+                   _format( $totals ? {totals => ['Total',$left_total, $right_total]} : (),
+                           _limit($data{limit}, map { [ $_, $merge{$_}[0], $merge{$_}[1] ] }
+                                   sort { $merge{$b}[0] + $merge{$b}[1] <=>
+                                            $merge{$a}[0] + $merge{$a}[1] } keys %merge  ))
+                 );
     } else {
         print div({-id=>'results'},
-                  div({-id=>'results-left'}, 
-                      _format(_limit($data{limit}, results(%{$data{left}})))), "\n",
+                  div({-id=>'results-left'},
+                      _format( $totals ? {totals => ['Total',$left_total]} : (),
+                               _limit($data{limit}, @lf))), "\n",
                   div({-id=>'results-right'},
-                      _format(_limit($data{limit}, results(%{$data{right}})))), "\n",
+                      _format( $totals ? {totals => ['Total',$right_total]} : (),
+                              _limit($data{limit}, @rf))), "\n",
                   hr({-style=>"display: none; clear: both;"}), "\n");
     }
 }
 
 sub _limit {
-	my $limit = shift @_;
-	return grep { _sum( @$_[1..$#$_] ) >= $limit } @_;
+    my $limit = shift @_;
+    return grep { _sum( @$_[1..$#$_] ) >= $limit } @_;
 }
 
 sub _sum {
@@ -119,13 +142,21 @@ sub results {
     return show_error($error) if $error;
 
     my @answer = $cqp->exec_rows("group A $tipo_dist $data{distr};");
-	return @answer;
+    return @answer;
 }
 
 sub _format {
+    my $head = undef;
+    $head = shift @_ if ref $_[0] eq "HASH";
     my @answer = @_;
     if (@answer) {
-        return table({-style=>"width: 100%; "}, map { Tr(td(_protect($_))) } @answer);
+        if ($head) {
+            return table({-style=>"width: 100%; "},
+                         Tr(th(_protect($head->{totals}))),
+                         map { Tr(td(_protect($_))) } @answer);
+        } else {
+            return table({-style=>"width: 100%; "}, map { Tr(td(_protect($_))) } @answer);
+        }
     } else {
         return table({-style=>"width: 100%; "}, Tr(td(i("sem resultados"))));
     }
@@ -177,10 +208,17 @@ sub show_form {
                                   -default => 'word',
                                   -values  => [])),
                    ));
-    print div({-style=>"margin-bottom: 15px; align: center"}, 
-                checkbox(-name=>'merge', -checked=>0, value=>'merge', -label=>"fundir numa única tabela"));
-	print div({-style=>"margin-bottom: 15px; align: center"},
-                "Limite mínimo de frequência ", textfield(-name=>'limite', -value=>'0'));
+
+    print div({-style=>"margin-bottom: 15px; align: center"},
+              checkbox(-name => 'totais', -label => 'Mostrar totais',
+                       -checked => 0,-value => 'ON'),
+              "&nbsp;&nbsp;&nbsp;",
+              checkbox(-name=>'merge', -checked=>0,
+                       -value=>'merge', -label=>"Fundir numa única tabela"));
+
+    print div({-style=>"margin-bottom: 15px; align: center"},
+              "Limite mínimo de frequência ", textfield(-name=>'limite', -value=>'0'));
+
     print submit(-id => 'procurar', -disabled => 'disabled',
                  -name => 'bt', -value => ' procurar ');
     print end_form;
